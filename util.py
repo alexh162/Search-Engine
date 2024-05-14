@@ -1,5 +1,3 @@
-import re
-import math
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
@@ -18,11 +16,10 @@ stemmer = PorterStemmer()
 # Helper function to tokenize and stem text
 def tokenize_and_stem(text):
     tokens = word_tokenize(text.lower())  # Tokenization
-    stemmed_tokens = [stemmer.stem(token) for token in tokens if token not in stop_words and len(token) >= 3]  # Stemming
-    return stemmed_tokens
+    valid_tokens = []
+    for token in tokens:
+        stemmed_token = stemmer.stem(token)
+        if token not in stop_words and stemmed_token not in stop_words and len(stemmed_token) >= 3:
+            valid_tokens.append(stemmed_token)  # Stemming
 
-# Function to calculate tf-idf score
-def calculate_tf_idf(term_freq, total_docs, doc_freq):
-    tf = 1 + math.log(term_freq, 10) if term_freq > 0 else 0
-    idf = math.log(total_docs / (doc_freq + 1), 10)
-    return tf * idf
+    return valid_tokens
