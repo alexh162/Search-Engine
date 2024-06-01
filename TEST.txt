@@ -1,0 +1,89 @@
+Good performance:
+
+1. multipoint AND hybrid
+Words that have a single meaning and are only used in a certain niche perform strong when searched for.
+
+2. software engineering
+The problem with this query was that 'software' dominated the search and engineering was ignored. This is 
+because I sorted only based on TFIDF and since 'software' had a higher score, the results only reflected
+that one word. I fixed this by creating a TFIDF vector with normalization and using cosine similarity.
+
+3. professor of computer science
+Academic titles and positions in a specific field give strong results because the terms are defined well 
+and often used together in relevant documents.
+
+4. advanced data analytics
+Technical terms that are often used together in specific fields such as data science perform well because 
+they represent strongly related words
+
+5. machine learning
+The searcher treats each term independently and does not consider the proximity 
+or relationship between terms within the query, which can lead to bad results 
+for phrase searches. This was improved when I added 2-gram.
+
+6. Informatics Department
+Words that are commonly placed together will have a stronger search result. This is due to 
+the cosine similarity function that checks the distance between vectors.
+
+7. quantum computing
+Terms that are very specific and typically used together get precise search results, especially 
+when niche terminology is involved. 2-gram also helps the search because these terms are related.
+
+8.  Great Wall of China
+Named places that are exact terms will give precise and relevant search results.
+
+9. computer
+Single-term queries avoid the trouble of handling multiple terms and loading 
+multiple inverted indexes, making the search simple and efficient.
+
+10. jennifer wong-ma
+Unique terms like names are likely to have fewer postings, making the search efficient and 
+the results highly relevant.
+
+Bad Performance:
+
+11. GPU
+Words that are acronyms don't do well because fail to contain the meaning of the individual words .
+
+12. a b c d e f g h i j k l m n o p q r s t u
+Queries with many tokens will take a long time to run since their TFIDF vector size grows 
+exponentially and calculations will take much longer.
+
+13. ARM CPUs
+The searcher doesn't handle words with multiple meanings well. Arm could mean the CPU 
+architecture or a human arm which could comfuse the searcher.
+
+14. #funny
+Terms that start with or contain non-alphabetic characters may not perform as expected 
+because the tokenizer removes these character and the inverted index isn't set up to deal 
+with such terms. It will have trouble finding relevant results because the searcher will 
+ignore them. The tokens are split into '#' and 'funny' which may not be the intended 
+search query.
+
+15. black birds
+Words that have little relevance will struggle because they are treated as separate tokens. 
+To improve my search engine, I implemented 2-gram which will help related short queries.
+
+16. naïve
+Terms with non-English characters might be mishandled if the indexing and tokenization 
+do not properly account for such characters, leading to incorrect results.
+
+17. car automobile
+The function does not handle synonyms, so it might miss documents that use different 
+terms with the same meaning, resulting in incomplete search results.
+
+18. hi hello hitch hare hair him
+For each token, my code loaded in a new index based on the first letter and discarded it 
+which is inefficient for words with the same first letter. The same index would be loaded 
+in multiple times, and this added a lot of time to the query. Instead of loading in the 
+index into memory, I created a map from token to position in the index and used seek() to 
+get the postings. This significantly reduced the time it took to retrieve the token postings.
+
+19. dates and numbers ("2023", "15th of July")
+Queries with dates and numbers may perform poorly because the search engine does not 
+handle or index numeric data into a standard format.
+
+20. to be or not to be
+Common phrases are not identified as single units, and are split into their individual words
+leading to bad search results. This query has many stop words which occur commonly throughout 
+many other websites.

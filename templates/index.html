@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .result-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .result-link {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .timing-info {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Page</h1>
+        <form method="POST" class="search-box">
+            <input type="text" name="query" placeholder="Enter your query" value="{{ query }}">
+            <button type="submit">Search</button>
+        </form>
+        <div class="timing-info">Query time: {{ search_time }} seconds</div>
+        <div class="timing-info">Summarize time: {{ summarize_time }} milliseconds</div>
+        <div class="results">
+            {% if results %}
+                <h2>Results for "{{ query }}":</h2>
+                {% for url, summary in results %}
+                    <div class="result-item">
+                        <a class="result-link" href="{{ url }}" target="_blank">{{ url }}</a>
+                        <div class="result-summary">{{ summary }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                {% if query %}
+                    <p>No results found for "{{ query }}"</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
